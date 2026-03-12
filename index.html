@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BTS Magic Shop Experience</title>
+    
+    <!-- Tailwind CSS (via CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Lucide Icons (via CDN) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* Fontes Personalizadas */
+        .font-playfair { font-family: 'Playfair Display', serif; }
+        .font-poppins { font-family: 'Poppins', sans-serif; }
+
+        /* Fundo Animado (Aurora) */
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .bg-aurora {
+            background: linear-gradient(-45deg, #2e1065, #1e1b4b, #4a044e, #0f172a, #3b0764);
+            background-size: 400% 400%;
+            animation: gradientShift 15s ease infinite;
+        }
+
+        /* Animações CSS personalizadas */
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .image-fade-in {
+            animation: fadeIn 1s ease-in-out;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(1.05); filter: blur(10px); }
+            to { opacity: 1; transform: scale(1); filter: blur(0px); }
+        }
+
+        /* Classes utilitárias para esconder elementos suavemente */
+        .fade-out { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
+        .fade-in { opacity: 1; pointer-events: auto; transition: opacity 0.5s ease; }
+        
+        /* Ajuste de visualizador de áudio */
+        .vis-bar { transition: height 0.3s ease, background-color 0.3s ease; }
+        .vis-bar.active { animation: bounceBar 0.5s infinite alternate ease-in-out; }
+        
+        @keyframes bounceBar {
+            from { height: 20%; }
+            to { height: 100%; }
+        }
+    </style>
+</head>
+<body id="main-bg" class="font-poppins min-h-screen transition-all duration-1000 flex flex-col items-center p-4 md:p-8 overflow-x-hidden bg-zinc-950">
+
+    <!-- Iframe do YouTube (Oculto) -->
+    <iframe 
+        id="yt-player"
+        width="0" 
+        height="0" 
+        src="" 
+        title="BTS Dynamite" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+        class="hidden">
+    </iframe>
+
+    <!-- Efeito Sonoro Mágico -->
+    <audio id="magic-sound" src="https://actions.google.com/sounds/v1/cartoon/magic_chime_scifi.ogg" preload="auto"></audio>
+
+    <!-- Container para as partículas de fundo (Fixado na tela) -->
+    <div id="bg-particles" class="fixed inset-0 pointer-events-none hidden z-0">
+        <div class="absolute top-10 left-10 animate-pulse text-purple-300 opacity-20"><i data-lucide="stars" width="48" height="48"></i></div>
+        <div class="absolute bottom-20 right-20 animate-bounce text-purple-300 opacity-20"><i data-lucide="music" width="40" height="40"></i></div>
+        <div class="absolute top-1/4 right-10 animate-pulse text-purple-300 opacity-20"><i data-lucide="sparkles" width="32" height="32"></i></div>
+    </div>
+
+    <!-- Container para os corações/estrelas animadas (Fixado na tela) -->
+    <div id="hearts-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
+
+    <!-- ========================================== -->
+    <!-- TELA INICIAL (FECHADA) -->
+    <!-- ========================================== -->
+    <div id="closed-screen" class="text-center space-y-6 md:space-y-8 my-auto fade-in transform scale-100 transition-transform duration-500 z-10 w-full max-w-lg">
+        <div class="relative inline-block group">
+            <div class="absolute -inset-6 bg-purple-600 rounded-full blur-2xl opacity-10 group-hover:opacity-40 transition duration-1000"></div>
+            <button 
+                onclick="toggleShop()"
+                class="relative bg-zinc-900 text-purple-400 p-8 md:p-12 rounded-full border border-purple-500/30 hover:border-purple-500 transition-all transform hover:scale-110 active:scale-95 shadow-2xl"
+            >
+                <i data-lucide="door-open" class="w-16 h-16 md:w-[90px] md:h-[90px]"></i>
+            </button>
+        </div>
+        <div class="space-y-2 md:space-y-4">
+            <h1 class="text-zinc-500 font-light tracking-[0.2em] md:tracking-[0.3em] text-xs md:text-sm uppercase px-4">Para uma pessoa especial</h1>
+            <h2 class="text-white font-black text-5xl md:text-6xl tracking-tighter">MAGIC SHOP</h2>
+            <p class="text-zinc-600 italic text-lg md:text-xl font-playfair">"Abra a porta e entre..."</p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TELA DA MAGIC SHOP (ABERTA) -->
+    <!-- ========================================== -->
+    <div id="open-screen" class="w-full max-w-6xl bg-white/10 backdrop-blur-3xl border border-white/20 rounded-[2rem] md:rounded-[3rem] p-5 sm:p-6 md:p-12 shadow-2xl my-auto hidden opacity-0 pointer-events-none transform scale-95 transition-all duration-500 z-10 relative">
+        
+        <!-- Top Bar -->
+        <div class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6 mb-8 md:mb-12">
+            <div class="flex items-center gap-4 md:gap-5 w-full sm:w-auto justify-between sm:justify-start">
+                <button 
+                    id="music-btn"
+                    onclick="toggleMusic()"
+                    class="p-3 md:p-4 rounded-full transition-all bg-yellow-400 text-purple-900 shadow-lg shadow-yellow-400/40 flex-shrink-0 hover:scale-105 active:scale-95"
+                >
+                    <i id="music-icon" data-lucide="volume-2" class="w-5 h-5 md:w-6 md:h-6"></i>
+                </button>
+                <div class="text-right sm:text-left">
+                    <h1 class="text-white text-xl sm:text-2xl md:text-3xl font-black flex items-center justify-end sm:justify-start gap-2">
+                        Magic Shop <i data-lucide="sparkles" class="text-yellow-400 w-5 h-5 md:w-6 md:h-6"></i>
+                    </h1>
+                    <p class="text-purple-200 text-[10px] md:text-xs opacity-70 uppercase tracking-widest font-bold">Luz, Câmera, Dynamite! 🧨</p>
+                </div>
+            </div>
+            <button 
+                onclick="toggleShop()"
+                class="text-white/40 hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-2 md:px-5 md:py-3 rounded-xl border border-white/10 w-full sm:w-auto mt-2 sm:mt-0"
+            >
+                Fechar Loja
+            </button>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+            
+            <!-- Imagem do Membro (Com Efeito 3D Tilt) -->
+            <div class="relative group" style="perspective: 1000px;">
+                <div class="absolute -inset-4 bg-gradient-to-tr from-yellow-400 via-purple-500 to-pink-500 rounded-[2rem] md:rounded-[2.5rem] blur opacity-20 group-hover:opacity-50 transition duration-700 pointer-events-none"></div>
+                
+                <div id="tilt-card" class="relative h-[300px] sm:h-[400px] md:h-[550px] rounded-3xl md:rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl bg-zinc-800 flex items-center justify-center transition-transform duration-100 ease-out will-change-transform">
+                    
+                    <!-- Fallback loading indicator -->
+                    <div id="image-loader" class="absolute inset-0 flex items-center justify-center">
+                        <i data-lucide="loader-2" class="text-purple-400 animate-spin w-8 h-8 md:w-10 md:h-10"></i>
+                    </div>
+
+                    <img 
+                        id="quote-image"
+                        src="" 
+                        alt="Membro do BTS"
+                        class="w-full h-full object-cover image-fade-in relative z-10"
+                        onload="document.getElementById('image-loader').style.display='none'"
+                        onerror="this.src='https://via.placeholder.com/600x800/18181b/a855f7?text=Foto+Local+N%C3%A3o+Encontrada'; document.getElementById('image-loader').style.display='none';"
+                    />
+                    
+                    <!-- Glare / Brilho do Efeito 3D -->
+                    <div id="glare" class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent z-15 opacity-0 transition-opacity pointer-events-none"></div>
+
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-20 pointer-events-none"></div>
+                    <div class="absolute bottom-6 md:bottom-8 left-6 md:left-8 flex items-center gap-3 md:gap-4 z-30 pointer-events-none">
+                        <div class="w-1 md:w-1.5 h-8 md:h-10 bg-yellow-400 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.6)]"></div>
+                        <span id="quote-author" class="text-white text-xl sm:text-2xl md:text-3xl font-black tracking-widest uppercase italic drop-shadow-lg">
+                            Autor
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo da Mensagem -->
+            <div class="flex flex-col justify-center space-y-6 md:space-y-8">
+                <div class="relative mt-4 md:mt-0">
+                    <div class="absolute -top-8 md:-top-10 -left-4 md:-left-6 text-yellow-400/20"><i data-lucide="quote" class="w-16 h-16 md:w-20 md:h-20"></i></div>
+                    <p id="quote-text" class="font-playfair text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white font-light leading-snug tracking-tight px-2 md:px-0">
+                        "Mensagem"
+                    </p>
+                </div>
+                
+                <div class="flex flex-col sm:flex-row gap-3 md:gap-5 pt-4">
+                    <button 
+                        onclick="getNewQuote()"
+                        class="bg-yellow-400 hover:bg-yellow-300 text-purple-900 px-6 md:px-8 py-4 md:py-5 rounded-2xl font-black transition-all shadow-xl shadow-yellow-400/20 flex items-center justify-center gap-2 md:gap-3 group transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
+                    >
+                        Próxima Inspiração <i data-lucide="stars" class="group-hover:rotate-180 transition-transform duration-700 w-5 h-5 md:w-[22px] md:h-[22px]"></i>
+                    </button>
+                    
+                    <button 
+                        onclick="createHearts()"
+                        class="bg-white/10 hover:bg-white/20 text-white px-6 md:px-8 py-4 md:py-5 rounded-2xl font-bold transition-all border border-white/10 flex items-center justify-center gap-2 md:gap-3 transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
+                    >
+                        Borahae! 💜
+                    </button>
+                </div>
+
+                <!-- Seletor de Bias -->
+                <div class="mt-4 pt-4 border-t border-white/10">
+                    <p class="text-white/50 text-[10px] md:text-xs uppercase font-bold tracking-widest mb-3 text-center sm:text-left">Escolha seu Bias</p>
+                    <div id="bias-selector" class="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3">
+                        <!-- Botões gerados por JS -->
+                    </div>
+                </div>
+
+                <!-- Player Visualizer Estilizado -->
+                <div class="bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] border border-white/10 flex flex-col gap-3 md:gap-4 mt-2">
+                    <div class="flex justify-between items-center">
+                        <span id="music-status-text" class="text-yellow-400 text-[10px] md:text-xs font-black uppercase tracking-widest">
+                            Agora Tocando
+                        </span>
+                        <span class="text-white/40 text-[9px] md:text-[10px] font-bold tracking-widest">BTS - DYNAMITE</span>
+                    </div>
+                    <div class="flex gap-1 md:gap-1.5 items-end h-8 md:h-10" id="visualizer-container">
+                        <!-- Barras do visualizador geradas via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-10 md:mt-16 pt-8 md:pt-10 border-t border-white/10 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-10 opacity-50">
+            <div class="flex items-center gap-2 text-white"><i data-lucide="music" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">King Kong, kick the drum</span></div>
+            <div class="flex items-center gap-2 text-white"><i data-lucide="heart" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">Rolling on like a rolling stone</span></div>
+            <div class="flex items-center gap-2 text-white"><i data-lucide="stars" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">Light it up like dynamite</span></div>
+        </div>
+        
+        <!-- Mensagem Especial para Rafaela -->
+        <div class="mt-8 pt-6 border-t border-white/5 text-center">
+            <p class="font-playfair italic text-lg md:text-xl text-yellow-400/90 drop-shadow-[0_0_10px_rgba(250,204,21,0.4)]">
+                "Para Rafaela: que esta Magic Shop seja sempre o seu refúgio. Você é especial do seu jeito. Borahae! 💜"
+            </p>
+        </div>
+    </div>
+
+    <!-- Lógica do Aplicativo em JavaScript Puro -->
+    <script>
+        // Array de citações puxando as fotos da sua pasta local "./fotos/"
+        const quotes = [
+            { id: 1, text: "Eu aprendi a amar a mim mesmo por quem eu sou, por quem eu fui e por quem espero me tornar.", author: "RM", shortName: "RM", image: "./fotos/rm.jpg" },
+            { id: 2, text: "Sua presença pode dar felicidade. Espero que você se lembre disso.", author: "Jin", shortName: "JN", image: "./fotos/jin.jpg" },
+            { id: 3, text: "Sonhe, embora seu início possa ser humilde, que o fim seja próspero.", author: "Suga", shortName: "SG", image: "./fotos/suga.jpg" },
+            { id: 4, text: "Mesmo quando a chuva parar, quando as nuvens se forem, eu continuarei aqui, da mesma forma.", author: "J-Hope", shortName: "JH", image: "./fotos/jhope.jpg" },
+            { id: 5, text: "Siga o seu caminho, mesmo que você viva por apenas um dia.", author: "Jimin", shortName: "JM", image: "./fotos/jimin.jpg" },
+            { id: 6, text: "Não fique preso no sonho de outra pessoa.", author: "V", shortName: "V", image: "./fotos/v.jpg" },
+            { id: 7, text: "Viver sem paixão é como estar morto.", author: "Jungkook", shortName: "JK", image: "./fotos/jungkook.jpg" },
+            { id: 8, text: "Roxo é a última cor do arco-íris. Roxo significa que eu confiarei e amarei você por um longo tempo.", author: "V (Borahae)", shortName: "OT7", image: "./fotos/grupo.jpg" }
+        ];
+
+        // Estado do app
+        let isOpen = false;
+        let isPlaying = false;
+        let currentQuote = null;
+
+        // Elementos do DOM
+        const mainBg = document.getElementById('main-bg');
+        const bgParticles = document.getElementById('bg-particles');
+        const closedScreen = document.getElementById('closed-screen');
+        const openScreen = document.getElementById('open-screen');
+        const ytPlayer = document.getElementById('yt-player');
+        const heartsContainer = document.getElementById('hearts-container');
+        
+        const quoteTextElem = document.getElementById('quote-text');
+        const quoteAuthorElem = document.getElementById('quote-author');
+        const quoteImageElem = document.getElementById('quote-image');
+        const imageLoaderElem = document.getElementById('image-loader');
+        const magicSound = document.getElementById('magic-sound');
+        
+        const musicBtn = document.getElementById('music-btn');
+        const musicIcon = document.getElementById('music-icon');
+        const musicStatusText = document.getElementById('music-status-text');
+        const visualizerContainer = document.getElementById('visualizer-container');
+        
+        const tiltCard = document.getElementById('tilt-card');
+        const glare = document.getElementById('glare');
+
+        // Link oficial do YT para Dynamite (com autoplay)
+        const youtubeLink = "https://www.youtube.com/embed/gdZLi9oWNZg?autoplay=1&loop=1&playlist=gdZLi9oWNZg";
+
+        // Inicializar
+        function init() {
+            lucide.createIcons(); // Renderiza os ícones
+            setRandomQuote();
+            createVisualizerBars();
+            createBiasSelector();
+            setupTiltEffect();
+        }
+
+        // Criar as barrinhas dançantes do player
+        function createVisualizerBars() {
+            visualizerContainer.innerHTML = '';
+            for (let i = 0; i < 24; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'w-1 rounded-full bg-white/10 vis-bar flex-grow';
+                bar.style.height = '15%';
+                visualizerContainer.appendChild(bar);
+            }
+        }
+
+        // Criar Seletor de Bias (Botões Redondos)
+        function createBiasSelector() {
+            const container = document.getElementById('bias-selector');
+            quotes.forEach(q => {
+                const btn = document.createElement('button');
+                btn.className = 'w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 hover:bg-yellow-400 hover:text-purple-900 border border-white/10 transition-all font-black text-xs md:text-sm text-white/70 hover:scale-110 shadow-lg flex items-center justify-center';
+                btn.innerText = q.shortName;
+                btn.title = q.author;
+                btn.onclick = () => {
+                    currentQuote = q;
+                    updateQuoteUI();
+                    createHearts();
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        // Efeito 3D ao passar o mouse na imagem (Apenas em telas maiores que tablet)
+        function setupTiltEffect() {
+            tiltCard.addEventListener('mousemove', (e) => {
+                if (window.innerWidth < 1024) return; // Desativa em telemóveis/tablets para não interferir no scroll
+                
+                const rect = tiltCard.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                // Calcula a rotação (máximo de 8 graus para ficar sutil)
+                const rotateX = ((y - centerY) / centerY) * -8;
+                const rotateY = ((x - centerX) / centerX) * 8;
+                
+                tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
+                glare.style.opacity = '1';
+                // Move o brilho acompanhando o mouse
+                glare.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
+            });
+
+            tiltCard.addEventListener('mouseleave', () => {
+                tiltCard.style.transform = `perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+                glare.style.opacity = '0';
+            });
+        }
+
+        function setRandomQuote() {
+            let next;
+            do {
+                next = quotes[Math.floor(Math.random() * quotes.length)];
+            } while (currentQuote && next.id === currentQuote.id && quotes.length > 1);
+            
+            currentQuote = next;
+            updateQuoteUI();
+        }
+
+        function updateQuoteUI() {
+            quoteTextElem.textContent = `"${currentQuote.text}"`;
+            quoteAuthorElem.textContent = currentQuote.author;
+            
+            // Exibir o loading enquanto a imagem carrega
+            imageLoaderElem.style.display = 'flex';
+            
+            // Truque para forçar a animação de fade-in
+            quoteImageElem.classList.remove('image-fade-in');
+            void quoteImageElem.offsetWidth;
+            
+            quoteImageElem.src = currentQuote.image;
+            quoteImageElem.classList.add('image-fade-in');
+        }
+
+        function getNewQuote() {
+            setRandomQuote();
+            createHearts();
+        }
+
+        function toggleShop() {
+            isOpen = !isOpen;
+
+            if (isOpen) {
+                // Efeito Sonoro Mágico
+                magicSound.volume = 0.5;
+                magicSound.play().catch(e => console.log("Áudio bloqueado pelo navegador", e));
+
+                // ABRIR LOJA
+                closedScreen.classList.remove('fade-in');
+                closedScreen.classList.add('fade-out', 'scale-105');
+                
+                setTimeout(() => {
+                    closedScreen.classList.add('hidden');
+                    openScreen.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        openScreen.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+                        openScreen.classList.add('opacity-100', 'pointer-events-auto', 'scale-100');
+                    }, 50);
+                    
+                    mainBg.classList.remove('bg-zinc-950');
+                    mainBg.classList.add('bg-aurora'); // Aplica o Fundo Animado
+                    bgParticles.classList.remove('hidden');
+                }, 300);
+
+                createHearts();
+                
+                // Tocar música
+                isPlaying = true;
+                ytPlayer.src = youtubeLink;
+                updateMusicUI();
+
+            } else {
+                // FECHAR LOJA
+                openScreen.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
+                openScreen.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+                
+                setTimeout(() => {
+                    openScreen.classList.add('hidden');
+                    closedScreen.classList.remove('hidden');
+                    
+                    setTimeout(() => {
+                        closedScreen.classList.remove('fade-out', 'scale-105');
+                        closedScreen.classList.add('fade-in');
+                    }, 50);
+                    
+                    mainBg.classList.remove('bg-aurora');
+                    mainBg.classList.add('bg-zinc-950');
+                    bgParticles.classList.add('hidden');
+                }, 300);
+
+                // Parar música
+                isPlaying = false;
+                ytPlayer.src = "";
+                updateMusicUI();
+            }
+        }
+
+        function toggleMusic() {
+            isPlaying = !isPlaying;
+            if (isPlaying) {
+                ytPlayer.src = youtubeLink;
+            } else {
+                ytPlayer.src = "";
+            }
+            updateMusicUI();
+        }
+
+        function updateMusicUI() {
+            const bars = document.querySelectorAll('.vis-bar');
+            
+            if (isPlaying) {
+                musicBtn.classList.replace('bg-white/10', 'bg-yellow-400');
+                musicBtn.classList.replace('text-white/50', 'text-purple-900');
+                musicBtn.classList.add('shadow-lg', 'shadow-yellow-400/40');
+                musicIcon.setAttribute('data-lucide', 'volume-2');
+                musicStatusText.textContent = "Agora Tocando";
+                
+                bars.forEach((bar, index) => {
+                    bar.classList.replace('bg-white/10', 'bg-yellow-400/80');
+                    bar.classList.add('active');
+                    bar.style.animationDelay = `${index * 0.05}s`;
+                    bar.style.animationDuration = `${0.4 + Math.random() * 0.8}s`;
+                });
+            } else {
+                musicBtn.classList.replace('bg-yellow-400', 'bg-white/10');
+                musicBtn.classList.replace('text-purple-900', 'text-white/50');
+                musicBtn.classList.remove('shadow-lg', 'shadow-yellow-400/40');
+                musicIcon.setAttribute('data-lucide', 'volume-x');
+                musicStatusText.textContent = "Música Pausada";
+                
+                bars.forEach(bar => {
+                    bar.classList.replace('bg-yellow-400/80', 'bg-white/10');
+                    bar.classList.remove('active');
+                    bar.style.height = '15%';
+                });
+            }
+            lucide.createIcons();
+        }
+
+        function createHearts() {
+            // SVGs para Coração e Estrela
+            const heartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
+            const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+
+            for (let i = 0; i < 20; i++) {
+                const particle = document.createElement('div');
+                const isStar = Math.random() > 0.4; // 60% chance de ser estrela dourada
+                
+                const left = Math.random() * 100;
+                const size = Math.random() * (35 - 15) + 15;
+                const duration = Math.random() * (4 - 2) + 2;
+                
+                particle.className = `absolute bottom-0 pointer-events-none z-50 ${isStar ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]' : 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]'}`;
+                particle.style.left = `${left}%`;
+                particle.style.fontSize = `${size}px`;
+                particle.style.animation = `floatUp ${duration}s linear forwards`;
+                
+                particle.innerHTML = isStar ? starSvg : heartSvg;
+                heartsContainer.appendChild(particle);
+                
+                setTimeout(() => {
+                    if(heartsContainer.contains(particle)) {
+                        heartsContainer.removeChild(particle);
+                    }
+                }, duration * 1000);
+            }
+        }
+
+        // Inicializa ao carregar a página
+        window.addEventListener('DOMContentLoaded', init);
+
+    </script>
+</body>
+</html>
