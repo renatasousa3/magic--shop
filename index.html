@@ -64,16 +64,8 @@
 </head>
 <body id="main-bg" class="font-poppins min-h-screen transition-all duration-1000 flex flex-col items-center p-4 md:p-8 overflow-x-hidden bg-zinc-950">
 
-    <!-- Iframe do YouTube (Oculto) -->
-    <iframe 
-        id="yt-player"
-        width="0" 
-        height="0" 
-        src="" 
-        title="BTS Dynamite" 
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-        class="hidden">
-    </iframe>
+    <!-- Áudio Local da Música (Substituindo o YouTube) -->
+    <audio id="bg-music" src="./dynamite.mp3" loop preload="auto"></audio>
 
     <!-- Efeito Sonoro Mágico -->
     <audio id="magic-sound" src="https://actions.google.com/sounds/v1/cartoon/magic_chime_scifi.ogg" preload="auto"></audio>
@@ -259,7 +251,7 @@
         const bgParticles = document.getElementById('bg-particles');
         const closedScreen = document.getElementById('closed-screen');
         const openScreen = document.getElementById('open-screen');
-        const ytPlayer = document.getElementById('yt-player');
+        const bgMusic = document.getElementById('bg-music');
         const heartsContainer = document.getElementById('hearts-container');
         
         const quoteTextElem = document.getElementById('quote-text');
@@ -275,9 +267,6 @@
         
         const tiltCard = document.getElementById('tilt-card');
         const glare = document.getElementById('glare');
-
-        // Link oficial do YT para Dynamite (com autoplay)
-        const youtubeLink = "https://www.youtube.com/embed/gdZLi9oWNZg?autoplay=1&loop=1&playlist=gdZLi9oWNZg";
 
         // Inicializar
         function init() {
@@ -403,7 +392,7 @@
                 
                 // Tocar música
                 isPlaying = true;
-                ytPlayer.src = youtubeLink;
+                bgMusic.play().catch(e => console.log("Áudio bloqueado", e));
                 updateMusicUI();
 
             } else {
@@ -427,7 +416,8 @@
 
                 // Parar música
                 isPlaying = false;
-                ytPlayer.src = "";
+                bgMusic.pause();
+                bgMusic.currentTime = 0; // Volta a música para o início ao fechar
                 updateMusicUI();
             }
         }
@@ -435,9 +425,9 @@
         function toggleMusic() {
             isPlaying = !isPlaying;
             if (isPlaying) {
-                ytPlayer.src = youtubeLink;
+                bgMusic.play().catch(e => console.log("Áudio bloqueado", e));
             } else {
-                ytPlayer.src = "";
+                bgMusic.pause();
             }
             updateMusicUI();
         }
