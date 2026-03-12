@@ -3,7 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Título da aba do navegador -->
     <title>Magic Shop</title>
+    
+    <!-- Meta tags para quando o link for compartilhado (WhatsApp, etc) -->
+    <meta property="og:title" content="Magic Shop">
+    <meta property="og:description" content="✨">
+    <meta property="og:type" content="website">
     
     <!-- Tailwind CSS (via CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -94,7 +101,9 @@
             </button>
         </div>
         <div class="space-y-2 md:space-y-4">
-            <h1 class="text-zinc-500 font-light tracking-[0.2em] md:tracking-[0.3em] text-xs md:text-sm uppercase px-4">Para uma pessoa especial</h1>
+            <div class="flex justify-center mb-4">
+                <i data-lucide="heart" class="w-8 h-8 md:w-10 md:h-10 text-purple-500 fill-purple-500 animate-pulse drop-shadow-[0_0_15px_rgba(168,85,247,0.6)]"></i>
+            </div>
             <h2 class="text-white font-black text-5xl md:text-6xl tracking-tighter">MAGIC SHOP</h2>
             <p class="text-zinc-600 italic text-lg md:text-xl font-playfair">"Abra a porta e entre..."</p>
         </div>
@@ -499,4 +508,3 @@
     </script>
 </body>
 </html>
-
