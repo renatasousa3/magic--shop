@@ -9,7 +9,7 @@
     
     <!-- Meta tags para quando o link for compartilhado (WhatsApp, etc) -->
     <meta property="og:title" content="Magic Shop">
-    <meta property="og:description" content="✨">
+    <meta property="og:description" content="Para uma pessoa especial ✨">
     <meta property="og:type" content="website">
     
     <!-- Tailwind CSS (via CDN) -->
@@ -24,54 +24,80 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
-        /* Fontes Personalizadas */
+        /* =========================================
+           SISTEMA DE TEMAS (DYNAMITE / SWIM)
+           ========================================= */
+        :root, body[data-theme="dynamite"] {
+            --theme-primary: #facc15; /* Amarelo */
+            --theme-primary-hover: #fde047; 
+            --theme-text: #4c1d95; /* Roxo escuro */
+            --theme-shadow: rgba(250, 204, 21, 0.4);
+            --theme-line-glow: rgba(250, 204, 21, 0.6);
+            --theme-grad-1: #facc15;
+            --theme-grad-2: #a855f7;
+            --theme-grad-3: #ec4899;
+            --theme-quote-op: rgba(250, 204, 21, 0.2);
+        }
+
+        body[data-theme="swim"] {
+            --theme-primary: #22d3ee; /* Ciano/Água */
+            --theme-primary-hover: #67e8f9; 
+            --theme-text: #1e3a8a; /* Azul Marinho profundo */
+            --theme-shadow: rgba(34, 211, 238, 0.4);
+            --theme-line-glow: rgba(34, 211, 238, 0.6);
+            --theme-grad-1: #22d3ee; /* Ciano */
+            --theme-grad-2: #3b82f6; /* Azul */
+            --theme-grad-3: #0d9488; /* Teal marinho */
+            --theme-quote-op: rgba(34, 211, 238, 0.15);
+        }
+
+        /* Classes Utilitárias do Tema */
+        .theme-bg-gradient { background-image: linear-gradient(to top right, var(--theme-grad-1), var(--theme-grad-2), var(--theme-grad-3)); }
+        .theme-btn-primary { background-color: var(--theme-primary); color: var(--theme-text); box-shadow: 0 10px 20px -5px var(--theme-shadow); }
+        .theme-btn-primary:hover { background-color: var(--theme-primary-hover); }
+        .theme-text-primary { color: var(--theme-primary); }
+        .theme-quote-icon { color: var(--theme-quote-op); }
+        .theme-glow-line { background-color: var(--theme-primary); box-shadow: 0 0 15px var(--theme-line-glow); }
+        
+        .bias-btn { background-color: rgb(255 255 255 / 0.05); color: rgb(255 255 255 / 0.7); }
+        .bias-btn:hover { background-color: var(--theme-primary); color: var(--theme-text); transform: scale(1.1); }
+        
+        .music-btn { background-color: rgb(255 255 255 / 0.1); color: rgb(255 255 255 / 0.5); }
+        .music-btn.active { background-color: var(--theme-primary); color: var(--theme-text); box-shadow: 0 10px 15px -3px var(--theme-shadow), 0 4px 6px -4px var(--theme-shadow); }
+
+        .vis-bar { transition: height 0.3s ease; background-color: rgb(255 255 255 / 0.1); }
+        .vis-bar.active { animation: bounceBar 0.5s infinite alternate ease-in-out; background-color: var(--theme-primary); opacity: 0.8; }
+
+        /* Fontes */
         .font-playfair { font-family: 'Playfair Display', serif; }
         .font-poppins { font-family: 'Poppins', sans-serif; }
 
-        /* Fundo Animado (Aurora) */
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
+        /* Fundos Animados */
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        
         .bg-aurora {
             background: linear-gradient(-45deg, #2e1065, #1e1b4b, #4a044e, #0f172a, #3b0764);
-            background-size: 400% 400%;
-            animation: gradientShift 15s ease infinite;
-        }
-
-        /* Animações CSS personalizadas */
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+            background-size: 400% 400%; animation: gradientShift 15s ease infinite;
         }
         
-        .image-fade-in {
-            animation: fadeIn 1s ease-in-out;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(1.05); filter: blur(10px); }
-            to { opacity: 1; transform: scale(1); filter: blur(0px); }
+        .bg-ocean {
+            background: linear-gradient(-45deg, #020617, #082f49, #0f766e, #0c4a6e, #064e3b);
+            background-size: 400% 400%; animation: gradientShift 15s ease infinite;
         }
 
-        /* Classes utilitárias para esconder elementos suavemente */
+        /* Animações CSS */
+        @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        .image-fade-in { animation: fadeIn 1s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(1.05); filter: blur(10px); } to { opacity: 1; transform: scale(1); filter: blur(0px); } }
+        @keyframes bounceBar { from { height: 20%; } to { height: 100%; } }
+        
         .fade-out { opacity: 0; pointer-events: none; transition: opacity 0.5s ease; }
         .fade-in { opacity: 1; pointer-events: auto; transition: opacity 0.5s ease; }
-        
-        /* Ajuste de visualizador de áudio */
-        .vis-bar { transition: height 0.3s ease, background-color 0.3s ease; }
-        .vis-bar.active { animation: bounceBar 0.5s infinite alternate ease-in-out; }
-        
-        @keyframes bounceBar {
-            from { height: 20%; }
-            to { height: 100%; }
-        }
     </style>
 </head>
-<body id="main-bg" class="font-poppins min-h-screen transition-all duration-1000 flex flex-col items-center p-4 md:p-8 overflow-x-hidden bg-zinc-950">
+<body id="main-bg" data-theme="dynamite" class="font-poppins min-h-screen transition-all duration-1000 flex flex-col items-center p-4 md:p-8 overflow-x-hidden bg-zinc-950">
 
-    <!-- Áudio Local da Música (Substituindo o YouTube) -->
+    <!-- Áudio Local da Música (Dinâmico) -->
     <audio id="bg-music" src="./dynamite.mp3" loop preload="auto"></audio>
 
     <!-- Efeito Sonoro Mágico -->
@@ -120,36 +146,48 @@
                 <button 
                     id="music-btn"
                     onclick="toggleMusic()"
-                    class="p-3 md:p-4 rounded-full transition-all bg-yellow-400 text-purple-900 shadow-lg shadow-yellow-400/40 flex-shrink-0 hover:scale-105 active:scale-95"
+                    class="music-btn p-3 md:p-4 rounded-full transition-all flex-shrink-0 hover:scale-105 active:scale-95"
                 >
                     <i id="music-icon" data-lucide="volume-2" class="w-5 h-5 md:w-6 md:h-6"></i>
                 </button>
                 <div class="text-right sm:text-left">
-                    <h1 class="text-white text-xl sm:text-2xl md:text-3xl font-black flex items-center justify-end sm:justify-start gap-2">
-                        Magic Shop <i data-lucide="sparkles" class="text-yellow-400 w-5 h-5 md:w-6 md:h-6"></i>
+                    <h1 class="text-white text-xl sm:text-2xl md:text-3xl font-black flex items-center justify-end sm:justify-start gap-2 transition-colors">
+                        Magic Shop <i id="theme-header-icon" data-lucide="sparkles" class="theme-text-primary w-5 h-5 md:w-6 md:h-6 transition-colors"></i>
                     </h1>
-                    <p class="text-purple-200 text-[10px] md:text-xs opacity-70 uppercase tracking-widest font-bold">Luz, Câmera, Dynamite! 🧨</p>
+                    <p id="theme-subtitle" class="theme-text-primary text-[10px] md:text-xs opacity-80 uppercase tracking-widest font-bold transition-colors">
+                        Luz, Câmera, Dynamite! 🧨
+                    </p>
                 </div>
             </div>
-            <button 
-                onclick="toggleShop()"
-                class="text-white/40 hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-2 md:px-5 md:py-3 rounded-xl border border-white/10 w-full sm:w-auto mt-2 sm:mt-0"
-            >
-                Fechar Loja
-            </button>
+            
+            <!-- Botões de Controles (Trocar Música / Fechar) -->
+            <div class="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 justify-center">
+                <button 
+                    onclick="toggleTheme()"
+                    class="text-white/80 hover:text-white transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 px-4 py-2 md:px-5 md:py-3 rounded-xl border border-white/20 flex items-center gap-2 shadow-lg"
+                    title="Alternar entre Dynamite e Swim"
+                >
+                    <i data-lucide="music-4" class="w-4 h-4"></i> Trocar Música
+                </button>
+                <button 
+                    onclick="toggleShop()"
+                    class="text-white/40 hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-2 md:px-5 md:py-3 rounded-xl border border-white/10"
+                >
+                    Fechar
+                </button>
+            </div>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             
-            <!-- Imagem do Membro (Com Efeito 3D Tilt) -->
+            <!-- Imagem do Membro (Com Efeito 3D Tilt e Borda Dinâmica) -->
             <div class="relative group" style="perspective: 1000px;">
-                <div class="absolute -inset-4 bg-gradient-to-tr from-yellow-400 via-purple-500 to-pink-500 rounded-[2rem] md:rounded-[2.5rem] blur opacity-20 group-hover:opacity-50 transition duration-700 pointer-events-none"></div>
+                <div class="theme-bg-gradient absolute -inset-4 rounded-[2rem] md:rounded-[2.5rem] blur opacity-20 group-hover:opacity-50 transition-all duration-700 pointer-events-none"></div>
                 
                 <div id="tilt-card" class="relative h-[300px] sm:h-[400px] md:h-[550px] rounded-3xl md:rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl bg-zinc-800 flex items-center justify-center transition-transform duration-100 ease-out will-change-transform">
                     
-                    <!-- Fallback loading indicator -->
                     <div id="image-loader" class="absolute inset-0 flex items-center justify-center">
-                        <i data-lucide="loader-2" class="text-purple-400 animate-spin w-8 h-8 md:w-10 md:h-10"></i>
+                        <i data-lucide="loader-2" class="theme-text-primary animate-spin w-8 h-8 md:w-10 md:h-10"></i>
                     </div>
 
                     <img 
@@ -161,12 +199,11 @@
                         onerror="this.src='https://via.placeholder.com/600x800/18181b/a855f7?text=Foto+Local+N%C3%A3o+Encontrada'; document.getElementById('image-loader').style.display='none';"
                     />
                     
-                    <!-- Glare / Brilho do Efeito 3D -->
                     <div id="glare" class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent z-15 opacity-0 transition-opacity pointer-events-none"></div>
 
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-20 pointer-events-none"></div>
                     <div class="absolute bottom-6 md:bottom-8 left-6 md:left-8 flex items-center gap-3 md:gap-4 z-30 pointer-events-none">
-                        <div class="w-1 md:w-1.5 h-8 md:h-10 bg-yellow-400 rounded-full shadow-[0_0_15px_rgba(250,204,21,0.6)]"></div>
+                        <div class="theme-glow-line w-1 md:w-1.5 h-8 md:h-10 rounded-full transition-all"></div>
                         <span id="quote-author" class="text-white text-xl sm:text-2xl md:text-3xl font-black tracking-widest uppercase italic drop-shadow-lg">
                             Autor
                         </span>
@@ -177,7 +214,7 @@
             <!-- Conteúdo da Mensagem -->
             <div class="flex flex-col justify-center space-y-6 md:space-y-8">
                 <div class="relative mt-4 md:mt-0">
-                    <div class="absolute -top-8 md:-top-10 -left-4 md:-left-6 text-yellow-400/20"><i data-lucide="quote" class="w-16 h-16 md:w-20 md:h-20"></i></div>
+                    <div class="absolute -top-8 md:-top-10 -left-4 md:-left-6 theme-quote-icon transition-colors"><i data-lucide="quote" class="w-16 h-16 md:w-20 md:h-20"></i></div>
                     <p id="quote-text" class="font-playfair text-xl sm:text-2xl md:text-4xl lg:text-5xl text-white font-light leading-snug tracking-tight px-2 md:px-0">
                         "Mensagem"
                     </p>
@@ -186,7 +223,7 @@
                 <div class="flex flex-col sm:flex-row gap-3 md:gap-5 pt-4">
                     <button 
                         onclick="getNewQuote()"
-                        class="bg-yellow-400 hover:bg-yellow-300 text-purple-900 px-6 md:px-8 py-4 md:py-5 rounded-2xl font-black transition-all shadow-xl shadow-yellow-400/20 flex items-center justify-center gap-2 md:gap-3 group transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
+                        class="theme-btn-primary px-6 md:px-8 py-4 md:py-5 rounded-2xl font-black transition-all flex items-center justify-center gap-2 md:gap-3 group transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
                     >
                         Próxima Inspiração <i data-lucide="stars" class="group-hover:rotate-180 transition-transform duration-700 w-5 h-5 md:w-[22px] md:h-[22px]"></i>
                     </button>
@@ -210,35 +247,34 @@
                 <!-- Player Visualizer Estilizado -->
                 <div class="bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] border border-white/10 flex flex-col gap-3 md:gap-4 mt-2">
                     <div class="flex justify-between items-center">
-                        <span id="music-status-text" class="text-yellow-400 text-[10px] md:text-xs font-black uppercase tracking-widest">
+                        <span id="music-status-text" class="theme-text-primary text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors">
                             Agora Tocando
                         </span>
-                        <span class="text-white/40 text-[9px] md:text-[10px] font-bold tracking-widest">BTS - DYNAMITE</span>
+                        <span id="theme-song-name" class="text-white/40 text-[9px] md:text-[10px] font-bold tracking-widest transition-all">BTS - DYNAMITE</span>
                     </div>
                     <div class="flex gap-1 md:gap-1.5 items-end h-8 md:h-10" id="visualizer-container">
-                        <!-- Barras do visualizador geradas via JS -->
+                        <!-- Barras geradas via JS -->
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- Rodapé e Mensagem Especial -->
         <div class="mt-10 md:mt-16 pt-8 md:pt-10 border-t border-white/10 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-10 opacity-50">
             <div class="flex items-center gap-2 text-white"><i data-lucide="music" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">King Kong, kick the drum</span></div>
             <div class="flex items-center gap-2 text-white"><i data-lucide="heart" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">Rolling on like a rolling stone</span></div>
             <div class="flex items-center gap-2 text-white"><i data-lucide="stars" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">Light it up like dynamite</span></div>
         </div>
         
-        <!-- Mensagem Especial para Rafaela -->
         <div class="mt-8 pt-6 border-t border-white/5 text-center">
-            <p class="font-playfair italic text-lg md:text-xl text-yellow-400/90 drop-shadow-[0_0_10px_rgba(250,204,21,0.4)]">
+            <p class="font-playfair italic text-lg md:text-xl theme-text-primary drop-shadow-md transition-colors">
                 "Para Rafaela: que esta Magic Shop seja sempre o seu refúgio. Você é especial do seu jeito. Borahae! 💜"
             </p>
         </div>
     </div>
 
-    <!-- Lógica do Aplicativo em JavaScript Puro -->
     <script>
-        // Array de citações puxando as fotos da sua pasta local "./fotos/"
+        // Array de Citações
         const quotes = [
             { id: 1, text: "Eu aprendi a amar a mim mesmo por quem eu sou, por quem eu fui e por quem espero me tornar.", author: "RM", shortName: "RM", image: "./fotos/rm.jpg" },
             { id: 2, text: "Sua presença pode dar felicidade. Espero que você se lembre disso.", author: "Jin", shortName: "JN", image: "./fotos/jin.jpg" },
@@ -249,6 +285,30 @@
             { id: 7, text: "Viver sem paixão é como estar morto.", author: "Jungkook", shortName: "JK", image: "./fotos/jungkook.jpg" },
             { id: 8, text: "Roxo é a última cor do arco-íris. Roxo significa que eu confiarei e amarei você por um longo tempo.", author: "V (Borahae)", shortName: "OT7", image: "./fotos/grupo.jpg" }
         ];
+
+        // =========================================
+        // LÓGICA DE TEMAS
+        // =========================================
+        const themesData = {
+            dynamite: {
+                id: 'dynamite',
+                audioSrc: './dynamite.mp3',
+                bgClass: 'bg-aurora',
+                subtitle: 'Luz, Câmera, Dynamite! 🧨',
+                songName: 'BTS - DYNAMITE',
+                icon: 'sparkles'
+            },
+            swim: {
+                id: 'swim',
+                audioSrc: './swim.mp3',
+                bgClass: 'bg-ocean',
+                subtitle: 'Navegando pelo oceano... 🌊⚓',
+                songName: 'BTS - SWIM',
+                icon: 'anchor'
+            }
+        };
+        
+        let activeTheme = 'dynamite';
 
         // Estado do app
         let isOpen = false;
@@ -277,32 +337,59 @@
         const tiltCard = document.getElementById('tilt-card');
         const glare = document.getElementById('glare');
 
-        // Inicializar
         function init() {
-            lucide.createIcons(); // Renderiza os ícones
+            lucide.createIcons();
             setRandomQuote();
             createVisualizerBars();
             createBiasSelector();
             setupTiltEffect();
         }
 
-        // Criar as barrinhas dançantes do player
+        // Função para Trocar a Música/Tema
+        function toggleTheme() {
+            activeTheme = activeTheme === 'dynamite' ? 'swim' : 'dynamite';
+            const theme = themesData[activeTheme];
+
+            // Muda o Sistema de Cores (CSS Variables)
+            document.body.setAttribute('data-theme', activeTheme);
+
+            // Atualiza Textos e Ícone Superior
+            document.getElementById('theme-subtitle').textContent = theme.subtitle;
+            document.getElementById('theme-song-name').textContent = theme.songName;
+            
+            const iconElem = document.getElementById('theme-header-icon');
+            iconElem.setAttribute('data-lucide', theme.icon);
+            lucide.createIcons();
+
+            // Troca o fundo animado
+            if (isOpen) {
+                mainBg.classList.remove('bg-aurora', 'bg-ocean');
+                mainBg.classList.add(theme.bgClass);
+            }
+
+            // Troca o arquivo de áudio
+            const wasPlaying = isPlaying;
+            bgMusic.src = theme.audioSrc;
+            if (wasPlaying) {
+                bgMusic.play().catch(e => console.log("Áudio bloqueado", e));
+            }
+        }
+
         function createVisualizerBars() {
             visualizerContainer.innerHTML = '';
             for (let i = 0; i < 24; i++) {
                 const bar = document.createElement('div');
-                bar.className = 'w-1 rounded-full bg-white/10 vis-bar flex-grow';
+                bar.className = 'w-1 rounded-full vis-bar flex-grow';
                 bar.style.height = '15%';
                 visualizerContainer.appendChild(bar);
             }
         }
 
-        // Criar Seletor de Bias (Botões Redondos)
         function createBiasSelector() {
             const container = document.getElementById('bias-selector');
             quotes.forEach(q => {
                 const btn = document.createElement('button');
-                btn.className = 'w-10 h-10 md:w-12 md:h-12 rounded-full bg-white/5 hover:bg-yellow-400 hover:text-purple-900 border border-white/10 transition-all font-black text-xs md:text-sm text-white/70 hover:scale-110 shadow-lg flex items-center justify-center';
+                btn.className = 'w-10 h-10 md:w-12 md:h-12 rounded-full transition-all font-black text-xs md:text-sm shadow-lg flex items-center justify-center bias-btn border border-white/10';
                 btn.innerText = q.shortName;
                 btn.title = q.author;
                 btn.onclick = () => {
@@ -314,24 +401,19 @@
             });
         }
 
-        // Efeito 3D ao passar o mouse na imagem (Apenas em telas maiores que tablet)
         function setupTiltEffect() {
             tiltCard.addEventListener('mousemove', (e) => {
-                if (window.innerWidth < 1024) return; // Desativa em telemóveis/tablets para não interferir no scroll
-                
+                if (window.innerWidth < 1024) return;
                 const rect = tiltCard.getBoundingClientRect();
                 const x = e.clientX - rect.left;
                 const y = e.clientY - rect.top;
                 const centerX = rect.width / 2;
                 const centerY = rect.height / 2;
-                
-                // Calcula a rotação (máximo de 8 graus para ficar sutil)
                 const rotateX = ((y - centerY) / centerY) * -8;
                 const rotateY = ((x - centerX) / centerX) * 8;
                 
                 tiltCard.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
                 glare.style.opacity = '1';
-                // Move o brilho acompanhando o mouse
                 glare.style.transform = `translate(${x * 0.1}px, ${y * 0.1}px)`;
             });
 
@@ -346,7 +428,6 @@
             do {
                 next = quotes[Math.floor(Math.random() * quotes.length)];
             } while (currentQuote && next.id === currentQuote.id && quotes.length > 1);
-            
             currentQuote = next;
             updateQuoteUI();
         }
@@ -354,14 +435,9 @@
         function updateQuoteUI() {
             quoteTextElem.textContent = `"${currentQuote.text}"`;
             quoteAuthorElem.textContent = currentQuote.author;
-            
-            // Exibir o loading enquanto a imagem carrega
             imageLoaderElem.style.display = 'flex';
-            
-            // Truque para forçar a animação de fade-in
             quoteImageElem.classList.remove('image-fade-in');
             void quoteImageElem.offsetWidth;
-            
             quoteImageElem.src = currentQuote.image;
             quoteImageElem.classList.add('image-fade-in');
         }
@@ -373,13 +449,12 @@
 
         function toggleShop() {
             isOpen = !isOpen;
+            const theme = themesData[activeTheme];
 
             if (isOpen) {
-                // Efeito Sonoro Mágico
                 magicSound.volume = 0.5;
-                magicSound.play().catch(e => console.log("Áudio bloqueado pelo navegador", e));
+                magicSound.play().catch(e => console.log("Áudio bloqueado", e));
 
-                // ABRIR LOJA
                 closedScreen.classList.remove('fade-in');
                 closedScreen.classList.add('fade-out', 'scale-105');
                 
@@ -393,19 +468,16 @@
                     }, 50);
                     
                     mainBg.classList.remove('bg-zinc-950');
-                    mainBg.classList.add('bg-aurora'); // Aplica o Fundo Animado
+                    mainBg.classList.add(theme.bgClass);
                     bgParticles.classList.remove('hidden');
                 }, 300);
 
                 createHearts();
                 
-                // Tocar música
                 isPlaying = true;
                 bgMusic.play().catch(e => console.log("Áudio bloqueado", e));
                 updateMusicUI();
-
             } else {
-                // FECHAR LOJA
                 openScreen.classList.remove('opacity-100', 'pointer-events-auto', 'scale-100');
                 openScreen.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
                 
@@ -418,15 +490,14 @@
                         closedScreen.classList.add('fade-in');
                     }, 50);
                     
-                    mainBg.classList.remove('bg-aurora');
+                    mainBg.classList.remove('bg-aurora', 'bg-ocean');
                     mainBg.classList.add('bg-zinc-950');
                     bgParticles.classList.add('hidden');
                 }, 300);
 
-                // Parar música
                 isPlaying = false;
                 bgMusic.pause();
-                bgMusic.currentTime = 0; // Volta a música para o início ao fechar
+                bgMusic.currentTime = 0;
                 updateMusicUI();
             }
         }
@@ -443,29 +514,20 @@
 
         function updateMusicUI() {
             const bars = document.querySelectorAll('.vis-bar');
-            
             if (isPlaying) {
-                musicBtn.classList.replace('bg-white/10', 'bg-yellow-400');
-                musicBtn.classList.replace('text-white/50', 'text-purple-900');
-                musicBtn.classList.add('shadow-lg', 'shadow-yellow-400/40');
+                musicBtn.classList.add('active');
                 musicIcon.setAttribute('data-lucide', 'volume-2');
                 musicStatusText.textContent = "Agora Tocando";
-                
                 bars.forEach((bar, index) => {
-                    bar.classList.replace('bg-white/10', 'bg-yellow-400/80');
                     bar.classList.add('active');
                     bar.style.animationDelay = `${index * 0.05}s`;
                     bar.style.animationDuration = `${0.4 + Math.random() * 0.8}s`;
                 });
             } else {
-                musicBtn.classList.replace('bg-yellow-400', 'bg-white/10');
-                musicBtn.classList.replace('text-purple-900', 'text-white/50');
-                musicBtn.classList.remove('shadow-lg', 'shadow-yellow-400/40');
+                musicBtn.classList.remove('active');
                 musicIcon.setAttribute('data-lucide', 'volume-x');
                 musicStatusText.textContent = "Música Pausada";
-                
                 bars.forEach(bar => {
-                    bar.classList.replace('bg-yellow-400/80', 'bg-white/10');
                     bar.classList.remove('active');
                     bar.style.height = '15%';
                 });
@@ -474,24 +536,41 @@
         }
 
         function createHearts() {
-            // SVGs para Coração e Estrela
+            const isSwim = activeTheme === 'swim';
+            
+            // Ícones SVG para os efeitos
             const heartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
             const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            const bubbleSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12a4 4 0 0 1 4-4"/></svg>`;
+            const dropSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>`;
 
             for (let i = 0; i < 20; i++) {
                 const particle = document.createElement('div');
-                const isStar = Math.random() > 0.4; // 60% chance de ser estrela dourada
+                const rand = Math.random();
+                let isPrimaryParticle = rand > 0.4;
                 
                 const left = Math.random() * 100;
                 const size = Math.random() * (35 - 15) + 15;
                 const duration = Math.random() * (4 - 2) + 2;
                 
-                particle.className = `absolute bottom-0 pointer-events-none z-50 ${isStar ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]' : 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]'}`;
+                let svgHtml = '';
+                let extraClasses = '';
+
+                // Decidir o que soltar baseado no tema selecionado
+                if (isSwim) {
+                    svgHtml = isPrimaryParticle ? bubbleSvg : dropSvg;
+                    extraClasses = isPrimaryParticle ? 'text-cyan-300 drop-shadow-[0_0_8px_rgba(103,232,249,0.8)]' : 'text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]';
+                } else {
+                    svgHtml = isPrimaryParticle ? starSvg : heartSvg;
+                    extraClasses = isPrimaryParticle ? 'text-yellow-400 drop-shadow-[0_0_8px_rgba(250,204,21,0.8)]' : 'text-purple-400 drop-shadow-[0_0_8px_rgba(192,132,252,0.8)]';
+                }
+
+                particle.className = `absolute bottom-0 pointer-events-none z-50 ${extraClasses}`;
                 particle.style.left = `${left}%`;
                 particle.style.fontSize = `${size}px`;
                 particle.style.animation = `floatUp ${duration}s linear forwards`;
                 
-                particle.innerHTML = isStar ? starSvg : heartSvg;
+                particle.innerHTML = svgHtml;
                 heartsContainer.appendChild(particle);
                 
                 setTimeout(() => {
@@ -502,7 +581,6 @@
             }
         }
 
-        // Inicializa ao carregar a página
         window.addEventListener('DOMContentLoaded', init);
 
     </script>
