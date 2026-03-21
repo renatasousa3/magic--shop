@@ -4,21 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Título da aba do navegador -->
     <title>Magic Shop</title>
     
-    <!-- Meta tags para quando o link for compartilhado (WhatsApp, etc) -->
     <meta property="og:title" content="Magic Shop">
     <meta property="og:description" content="Para uma pessoa especial ✨">
     <meta property="og:type" content="website">
     
-    <!-- Tailwind CSS (via CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
-    <!-- Lucide Icons (via CDN) -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Poppins:wght@300;400;600;700;900&display=swap" rel="stylesheet">
@@ -28,9 +22,9 @@
            SISTEMA DE TEMAS (DYNAMITE / SWIM)
            ========================================= */
         :root, body[data-theme="dynamite"] {
-            --theme-primary: #facc15; /* Amarelo */
+            --theme-primary: #facc15; 
             --theme-primary-hover: #fde047; 
-            --theme-text: #4c1d95; /* Roxo escuro */
+            --theme-text: #4c1d95; 
             --theme-shadow: rgba(250, 204, 21, 0.4);
             --theme-line-glow: rgba(250, 204, 21, 0.6);
             --theme-grad-1: #facc15;
@@ -40,14 +34,14 @@
         }
 
         body[data-theme="swim"] {
-            --theme-primary: #22d3ee; /* Ciano/Água */
+            --theme-primary: #22d3ee; 
             --theme-primary-hover: #67e8f9; 
-            --theme-text: #1e3a8a; /* Azul Marinho profundo */
+            --theme-text: #1e3a8a; 
             --theme-shadow: rgba(34, 211, 238, 0.4);
             --theme-line-glow: rgba(34, 211, 238, 0.6);
-            --theme-grad-1: #22d3ee; /* Ciano */
-            --theme-grad-2: #3b82f6; /* Azul */
-            --theme-grad-3: #0d9488; /* Teal marinho */
+            --theme-grad-1: #22d3ee; 
+            --theme-grad-2: #3b82f6; 
+            --theme-grad-3: #0d9488; 
             --theme-quote-op: rgba(34, 211, 238, 0.15);
         }
 
@@ -56,6 +50,7 @@
         .theme-btn-primary { background-color: var(--theme-primary); color: var(--theme-text); box-shadow: 0 10px 20px -5px var(--theme-shadow); }
         .theme-btn-primary:hover { background-color: var(--theme-primary-hover); }
         .theme-text-primary { color: var(--theme-primary); }
+        .theme-border-primary { border-color: var(--theme-primary); }
         .theme-quote-icon { color: var(--theme-quote-op); }
         .theme-glow-line { background-color: var(--theme-primary); box-shadow: 0 0 15px var(--theme-line-glow); }
         
@@ -75,18 +70,25 @@
         /* Fundos Animados */
         @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
         
-        .bg-aurora {
-            background: linear-gradient(-45deg, #2e1065, #1e1b4b, #4a044e, #0f172a, #3b0764);
-            background-size: 400% 400%; animation: gradientShift 15s ease infinite;
-        }
-        
-        .bg-ocean {
-            background: linear-gradient(-45deg, #020617, #082f49, #0f766e, #0c4a6e, #064e3b);
-            background-size: 400% 400%; animation: gradientShift 15s ease infinite;
-        }
+        .bg-aurora { background: linear-gradient(-45deg, #2e1065, #1e1b4b, #4a044e, #0f172a, #3b0764); background-size: 400% 400%; animation: gradientShift 15s ease infinite; }
+        .bg-ocean { background: linear-gradient(-45deg, #020617, #082f49, #0f766e, #0c4a6e, #064e3b); background-size: 400% 400%; animation: gradientShift 15s ease infinite; }
+
+        /* Scrollbar customizada para os painéis */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(255, 255, 255, 0.05); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--theme-primary); border-radius: 10px; }
 
         /* Animações CSS */
         @keyframes floatUp { 0% { transform: translateY(0) rotate(0deg); opacity: 1; } 100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; } }
+        @keyframes floatUpSlow { 0% { transform: translateY(0) scale(1); opacity: 1; } 100% { transform: translateY(-300px) scale(1.5); opacity: 0; } }
+        
+        /* Nova Animação do Vento de Poeira Estelar */
+        @keyframes stardustWind {
+            0% { transform: translate(0, 0) scale(0.5) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            100% { transform: translate(var(--tx), var(--ty)) scale(1.5) rotate(360deg); opacity: 0; }
+        }
+
         .image-fade-in { animation: fadeIn 1s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: scale(1.05); filter: blur(10px); } to { opacity: 1; transform: scale(1); filter: blur(0px); } }
         @keyframes bounceBar { from { height: 20%; } to { height: 100%; } }
@@ -97,20 +99,22 @@
 </head>
 <body id="main-bg" data-theme="dynamite" class="font-poppins min-h-screen transition-all duration-1000 flex flex-col items-center p-4 md:p-8 overflow-x-hidden bg-zinc-950">
 
-    <!-- Áudio Local da Música (Dinâmico) -->
+    <!-- Áudios Locais -->
     <audio id="bg-music" src="./dynamite.mp3" loop preload="auto"></audio>
-
-    <!-- Efeito Sonoro Mágico -->
     <audio id="magic-sound" src="https://actions.google.com/sounds/v1/cartoon/magic_chime_scifi.ogg" preload="auto"></audio>
 
-    <!-- Container para as partículas de fundo (Fixado na tela) -->
+    <!-- Overlay da Transição "Wipe" -->
+    <div id="wipe-overlay" class="fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-700 ease-in-out flex items-center justify-center pointer-events-none shadow-[0_0_50px_rgba(0,0,0,0.8)]">
+        <i id="wipe-icon" data-lucide="sparkles" class="w-32 h-32 text-white animate-pulse opacity-50"></i>
+    </div>
+
+    <!-- Partículas de Fundo -->
     <div id="bg-particles" class="fixed inset-0 pointer-events-none hidden z-0">
         <div class="absolute top-10 left-10 animate-pulse text-purple-300 opacity-20"><i data-lucide="stars" width="48" height="48"></i></div>
         <div class="absolute bottom-20 right-20 animate-bounce text-purple-300 opacity-20"><i data-lucide="music" width="40" height="40"></i></div>
         <div class="absolute top-1/4 right-10 animate-pulse text-purple-300 opacity-20"><i data-lucide="sparkles" width="32" height="32"></i></div>
     </div>
 
-    <!-- Container para os corações/estrelas animadas (Fixado na tela) -->
     <div id="hearts-container" class="fixed inset-0 pointer-events-none z-50 overflow-hidden"></div>
 
     <!-- ========================================== -->
@@ -143,11 +147,7 @@
         <!-- Top Bar -->
         <div class="flex flex-col sm:flex-row justify-between items-center gap-4 sm:gap-6 mb-8 md:mb-12">
             <div class="flex items-center gap-4 md:gap-5 w-full sm:w-auto justify-between sm:justify-start">
-                <button 
-                    id="music-btn"
-                    onclick="toggleMusic()"
-                    class="music-btn p-3 md:p-4 rounded-full transition-all flex-shrink-0 hover:scale-105 active:scale-95"
-                >
+                <button id="music-btn" onclick="toggleMusic()" class="music-btn p-3 md:p-4 rounded-full transition-all flex-shrink-0 hover:scale-105 active:scale-95">
                     <i id="music-icon" data-lucide="volume-2" class="w-5 h-5 md:w-6 md:h-6"></i>
                 </button>
                 <div class="text-right sm:text-left">
@@ -160,53 +160,31 @@
                 </div>
             </div>
             
-            <!-- Botões de Controles (Trocar Música / Fechar) -->
-            <div class="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 justify-center">
-                <button 
-                    onclick="toggleTheme()"
-                    class="text-white/80 hover:text-white transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 px-4 py-2 md:px-5 md:py-3 rounded-xl border border-white/20 flex items-center gap-2 shadow-lg"
-                    title="Alternar entre Dynamite e Swim"
-                >
-                    <i data-lucide="music-4" class="w-4 h-4"></i> Trocar Música
+            <div class="flex flex-wrap items-center justify-center gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+                <button onclick="toggleTheme()" class="text-white/80 hover:text-white transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/10 hover:bg-white/20 px-3 py-2 md:px-4 md:py-3 rounded-xl border border-white/20 flex items-center gap-2" title="Mudar Música">
+                    <i data-lucide="music-4" class="w-4 h-4"></i> Trocar
                 </button>
-                <button 
-                    onclick="toggleShop()"
-                    class="text-white/40 hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 px-4 py-2 md:px-5 md:py-3 rounded-xl border border-white/10"
-                >
-                    Fechar
+                <button onclick="toggleShop()" class="text-white/40 hover:text-white hover:bg-white/10 transition-all text-[10px] md:text-xs font-bold uppercase tracking-widest bg-white/5 px-3 py-2 md:px-4 md:py-3 rounded-xl border border-white/10">
+                    <i data-lucide="x" class="w-4 h-4"></i>
                 </button>
             </div>
         </div>
 
         <div class="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
             
-            <!-- Imagem do Membro (Com Efeito 3D Tilt e Borda Dinâmica) -->
+            <!-- Imagem do Membro -->
             <div class="relative group" style="perspective: 1000px;">
                 <div class="theme-bg-gradient absolute -inset-4 rounded-[2rem] md:rounded-[2.5rem] blur opacity-20 group-hover:opacity-50 transition-all duration-700 pointer-events-none"></div>
-                
                 <div id="tilt-card" class="relative h-[300px] sm:h-[400px] md:h-[550px] rounded-3xl md:rounded-[2rem] overflow-hidden border border-white/20 shadow-2xl bg-zinc-800 flex items-center justify-center transition-transform duration-100 ease-out will-change-transform">
-                    
                     <div id="image-loader" class="absolute inset-0 flex items-center justify-center">
                         <i data-lucide="loader-2" class="theme-text-primary animate-spin w-8 h-8 md:w-10 md:h-10"></i>
                     </div>
-
-                    <img 
-                        id="quote-image"
-                        src="" 
-                        alt="Membro do BTS"
-                        class="w-full h-full object-cover image-fade-in relative z-10"
-                        onload="document.getElementById('image-loader').style.display='none'"
-                        onerror="this.src='https://via.placeholder.com/600x800/18181b/a855f7?text=Foto+Local+N%C3%A3o+Encontrada'; document.getElementById('image-loader').style.display='none';"
-                    />
-                    
+                    <img id="quote-image" src="" alt="Membro do BTS" class="w-full h-full object-cover image-fade-in relative z-10" onload="document.getElementById('image-loader').style.display='none'" onerror="this.src='https://via.placeholder.com/600x800/18181b/a855f7?text=Foto+Local+N%C3%A3o+Encontrada'; document.getElementById('image-loader').style.display='none';"/>
                     <div id="glare" class="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-transparent z-15 opacity-0 transition-opacity pointer-events-none"></div>
-
                     <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent z-20 pointer-events-none"></div>
                     <div class="absolute bottom-6 md:bottom-8 left-6 md:left-8 flex items-center gap-3 md:gap-4 z-30 pointer-events-none">
                         <div class="theme-glow-line w-1 md:w-1.5 h-8 md:h-10 rounded-full transition-all"></div>
-                        <span id="quote-author" class="text-white text-xl sm:text-2xl md:text-3xl font-black tracking-widest uppercase italic drop-shadow-lg">
-                            Autor
-                        </span>
+                        <span id="quote-author" class="text-white text-xl sm:text-2xl md:text-3xl font-black tracking-widest uppercase italic drop-shadow-lg">Autor</span>
                     </div>
                 </div>
             </div>
@@ -221,52 +199,58 @@
                 </div>
                 
                 <div class="flex flex-col sm:flex-row gap-3 md:gap-5 pt-4">
-                    <button 
-                        onclick="getNewQuote()"
-                        class="theme-btn-primary px-6 md:px-8 py-4 md:py-5 rounded-2xl font-black transition-all flex items-center justify-center gap-2 md:gap-3 group transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
-                    >
+                    <button onclick="getNewQuote()" class="theme-btn-primary px-6 md:px-8 py-4 md:py-5 rounded-2xl font-black transition-all flex items-center justify-center gap-2 md:gap-3 group transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto">
                         Próxima Inspiração <i data-lucide="stars" class="group-hover:rotate-180 transition-transform duration-700 w-5 h-5 md:w-[22px] md:h-[22px]"></i>
                     </button>
-                    
-                    <button 
-                        onclick="createHearts()"
-                        class="bg-white/10 hover:bg-white/20 text-white px-6 md:px-8 py-4 md:py-5 rounded-2xl font-bold transition-all border border-white/10 flex items-center justify-center gap-2 md:gap-3 transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto"
-                    >
+                    <button onclick="createHearts()" class="bg-white/10 hover:bg-white/20 text-white px-6 md:px-8 py-4 md:py-5 rounded-2xl font-bold transition-all border border-white/10 flex items-center justify-center gap-2 md:gap-3 transform hover:-translate-y-1 active:scale-95 text-sm sm:text-base w-full sm:w-auto">
                         Borahae! 💜
                     </button>
                 </div>
 
-                <!-- Seletor de Bias -->
                 <div class="mt-4 pt-4 border-t border-white/10">
                     <p class="text-white/50 text-[10px] md:text-xs uppercase font-bold tracking-widest mb-3 text-center sm:text-left">Escolha seu Bias</p>
                     <div id="bias-selector" class="flex flex-wrap justify-center sm:justify-start gap-2 md:gap-3">
-                        <!-- Botões gerados por JS -->
+                        <!-- Gerado por JS -->
                     </div>
                 </div>
 
-                <!-- Player Visualizer Estilizado -->
+                <!-- Visualizer -->
                 <div class="bg-white/5 p-4 md:p-6 rounded-2xl md:rounded-[2rem] border border-white/10 flex flex-col gap-3 md:gap-4 mt-2">
                     <div class="flex justify-between items-center">
-                        <span id="music-status-text" class="theme-text-primary text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors">
-                            Agora Tocando
-                        </span>
+                        <span id="music-status-text" class="theme-text-primary text-[10px] md:text-xs font-black uppercase tracking-widest transition-colors">Agora Tocando</span>
                         <span id="theme-song-name" class="text-white/40 text-[9px] md:text-[10px] font-bold tracking-widest transition-all">BTS - DYNAMITE</span>
                     </div>
                     <div class="flex gap-1 md:gap-1.5 items-end h-8 md:h-10" id="visualizer-container">
-                        <!-- Barras geradas via JS -->
+                        <!-- Gerado por JS -->
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Rodapé e Mensagem Especial -->
-        <div class="mt-10 md:mt-16 pt-8 md:pt-10 border-t border-white/10 flex flex-col sm:flex-row flex-wrap justify-center items-center gap-4 sm:gap-6 md:gap-10 opacity-50">
-            <div class="flex items-center gap-2 text-white"><i data-lucide="music" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">King Kong, kick the drum</span></div>
-            <div class="flex items-center gap-2 text-white"><i data-lucide="heart" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">Rolling on like a rolling stone</span></div>
-            <div class="flex items-center gap-2 text-white"><i data-lucide="stars" class="w-4 h-4 md:w-[16px] md:h-[16px]"></i><span class="text-[9px] sm:text-[11px] uppercase font-black tracking-widest text-center">Light it up like dynamite</span></div>
+        <!-- NOVO: Mural de Recados -->
+        <div class="mt-12 md:mt-16 border-t border-white/10 pt-8 md:pt-12 w-full max-w-4xl mx-auto">
+            <h3 class="text-white text-lg md:text-2xl font-black mb-2 flex items-center gap-3 justify-center uppercase tracking-widest">
+                <i data-lucide="pen-tool" class="theme-text-primary"></i> Sussurros do Coração
+            </h3>
+            
+            <!-- Observação Poética -->
+            <p class="text-white/60 text-xs md:text-sm text-center mb-6 font-playfair italic px-4 max-w-2xl mx-auto leading-relaxed">
+                "Pequeno segredo da Magic Shop: suas palavras são como poeira estelar. Elas não ficam guardadas em nenhum lugar além deste momento. Ao fechar esta porta, suas cartas voarão secretamente para o universo, tornando-se um refúgio e um segredo eternamente seu."
+            </p>
+            
+            <div class="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <input type="text" id="message-input" placeholder="Escreva o que o seu coração sente..." class="flex-grow bg-white/5 border border-white/10 rounded-2xl px-5 py-4 text-white focus:outline-none focus:border-theme-primary transition-colors placeholder-white/30 text-sm md:text-base" onkeypress="handleEnter(event)">
+                <button onclick="sendMessage()" class="theme-btn-primary px-8 py-4 rounded-2xl font-black flex items-center justify-center gap-2 whitespace-nowrap active:scale-95 transition-transform">
+                    Enviar <i data-lucide="send" class="w-4 h-4"></i>
+                </button>
+            </div>
+            
+            <div id="messages-list" class="mt-6 space-y-3 max-h-48 overflow-y-auto pr-2">
+                <!-- As mensagens enviadas aparecerão aqui -->
+            </div>
         </div>
-        
-        <div class="mt-8 pt-6 border-t border-white/5 text-center">
+
+        <div class="mt-10 pt-8 border-t border-white/5 text-center">
             <p class="font-playfair italic text-lg md:text-xl theme-text-primary drop-shadow-md transition-colors">
                 "Para Rafaela: que esta Magic Shop seja sempre o seu refúgio. Você é especial do seu jeito. Borahae! 💜"
             </p>
@@ -274,7 +258,6 @@
     </div>
 
     <script>
-        // Array de Citações
         const quotes = [
             { id: 1, text: "Eu aprendi a amar a mim mesmo por quem eu sou, por quem eu fui e por quem espero me tornar.", author: "RM", shortName: "RM", image: "./fotos/rm.jpg" },
             { id: 2, text: "Sua presença pode dar felicidade. Espero que você se lembre disso.", author: "Jin", shortName: "JN", image: "./fotos/jin.jpg" },
@@ -283,12 +266,10 @@
             { id: 5, text: "Siga o seu caminho, mesmo que você viva por apenas um dia.", author: "Jimin", shortName: "JM", image: "./fotos/jimin.jpg" },
             { id: 6, text: "Não fique preso no sonho de outra pessoa.", author: "V", shortName: "V", image: "./fotos/v.jpg" },
             { id: 7, text: "Viver sem paixão é como estar morto.", author: "Jungkook", shortName: "JK", image: "./fotos/jungkook.jpg" },
-            { id: 8, text: "Roxo é a última cor do arco-íris. Roxo significa que eu confiarei e amarei você por um longo tempo.", author: "V (Borahae)", shortName: "OT7", image: "./fotos/grupo.jpg" }
+            { id: 8, text: "Roxo é a última cor do arco-íris. Roxo significa que eu confiarei e amarei você por longo tempo.", author: "V (Borahae)", shortName: "OT7", image: "./fotos/grupo.jpg" }
         ];
 
-        // =========================================
-        // LÓGICA DE TEMAS
-        // =========================================
+        // Temas
         const themesData = {
             dynamite: {
                 id: 'dynamite',
@@ -309,19 +290,18 @@
         };
         
         let activeTheme = 'dynamite';
-
-        // Estado do app
         let isOpen = false;
         let isPlaying = false;
         let currentQuote = null;
 
-        // Elementos do DOM
         const mainBg = document.getElementById('main-bg');
         const bgParticles = document.getElementById('bg-particles');
         const closedScreen = document.getElementById('closed-screen');
         const openScreen = document.getElementById('open-screen');
         const bgMusic = document.getElementById('bg-music');
         const heartsContainer = document.getElementById('hearts-container');
+        const wipeOverlay = document.getElementById('wipe-overlay');
+        const wipeIcon = document.getElementById('wipe-icon');
         
         const quoteTextElem = document.getElementById('quote-text');
         const quoteAuthorElem = document.getElementById('quote-author');
@@ -345,33 +325,131 @@
             setupTiltEffect();
         }
 
-        // Função para Trocar a Música/Tema
+        // =========================================
+        // TRANSIÇÃO WIPE MAGNÍFICA
+        // =========================================
         function toggleTheme() {
-            activeTheme = activeTheme === 'dynamite' ? 'swim' : 'dynamite';
-            const theme = themesData[activeTheme];
+            // Define o próximo tema
+            const nextTheme = activeTheme === 'dynamite' ? 'swim' : 'dynamite';
+            const theme = themesData[nextTheme];
 
-            // Muda o Sistema de Cores (CSS Variables)
-            document.body.setAttribute('data-theme', activeTheme);
-
-            // Atualiza Textos e Ícone Superior
-            document.getElementById('theme-subtitle').textContent = theme.subtitle;
-            document.getElementById('theme-song-name').textContent = theme.songName;
-            
-            const iconElem = document.getElementById('theme-header-icon');
-            iconElem.setAttribute('data-lucide', theme.icon);
+            // Prepara a cor e ícone da cortina Wipe
+            wipeOverlay.className = `fixed inset-0 z-[100] transform -translate-x-full transition-transform duration-700 ease-in-out flex items-center justify-center shadow-[0_0_50px_rgba(0,0,0,0.8)] ${theme.bgClass}`;
+            wipeIcon.setAttribute('data-lucide', theme.icon);
             lucide.createIcons();
 
-            // Troca o fundo animado
-            if (isOpen) {
-                mainBg.classList.remove('bg-aurora', 'bg-ocean');
-                mainBg.classList.add(theme.bgClass);
-            }
+            // 1. Faz a cortina deslizar e tapar o ecrã
+            wipeOverlay.classList.remove('-translate-x-full');
+            wipeOverlay.classList.add('translate-x-0');
 
-            // Troca o arquivo de áudio
-            const wasPlaying = isPlaying;
-            bgMusic.src = theme.audioSrc;
-            if (wasPlaying) {
-                bgMusic.play().catch(e => console.log("Áudio bloqueado", e));
+            // 2. Quando o ecrã estiver totalmente tapado, mudamos os dados por trás
+            setTimeout(() => {
+                activeTheme = nextTheme;
+                document.body.setAttribute('data-theme', activeTheme);
+                document.getElementById('theme-subtitle').textContent = theme.subtitle;
+                document.getElementById('theme-song-name').textContent = theme.songName;
+                
+                const iconElem = document.getElementById('theme-header-icon');
+                iconElem.setAttribute('data-lucide', theme.icon);
+                lucide.createIcons();
+
+                if (isOpen) {
+                    mainBg.classList.remove('bg-aurora', 'bg-ocean');
+                    mainBg.classList.add(theme.bgClass);
+                }
+
+                // Troca e retoma a música
+                const wasPlaying = isPlaying;
+                bgMusic.src = theme.audioSrc;
+                if (wasPlaying) bgMusic.play().catch(e => console.log(e));
+
+                // 3. Faz a cortina deslizar para fora e revelar a surpresa
+                wipeOverlay.classList.remove('translate-x-0');
+                wipeOverlay.classList.add('translate-x-full');
+
+                // 4. Reinicia a posição invisível da cortina para a próxima vez
+                setTimeout(() => {
+                    wipeOverlay.classList.remove('transition-transform', 'duration-700', 'translate-x-full');
+                    wipeOverlay.classList.add('-translate-x-full');
+                    void wipeOverlay.offsetWidth; // Força re-leitura do DOM
+                    wipeOverlay.classList.add('transition-transform', 'duration-700');
+                }, 700);
+
+            }, 700);
+        }
+
+        // =========================================
+        // MURAL DE RECADOS
+        // =========================================
+        function handleEnter(e) {
+            if (e.key === 'Enter') sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const text = input.value.trim();
+            if (!text) return;
+
+            const list = document.getElementById('messages-list');
+            const msgDiv = document.createElement('div');
+            msgDiv.className = 'bg-white/10 backdrop-blur-sm border border-white/5 rounded-xl p-4 text-sm md:text-base text-white/90 animate-in fade-in slide-in-from-top-4 duration-500';
+            msgDiv.innerHTML = `<span class="theme-text-primary font-bold mr-2 uppercase text-xs tracking-widest">Rafaela ✨:</span>${text}`;
+            
+            list.prepend(msgDiv); // Adiciona a mensagem no topo
+            input.value = '';
+
+            // Dispara um efeito visual especial pelo ecrã!
+            createMessageEffect();
+        }
+
+        function createMessageEffect() {
+            const isSwim = activeTheme === 'swim';
+            const numParticles = 30; // Quantidade de poeira estelar
+            
+            // SVGs para a poeira
+            const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
+            const bubbleSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12a4 4 0 0 1 4-4"/></svg>`;
+
+            for (let i = 0; i < numParticles; i++) {
+                const particle = document.createElement('div');
+                
+                // Tema visual das partículas
+                const iconSvg = isSwim ? bubbleSvg : starSvg;
+                const colorClass = isSwim 
+                    ? 'text-cyan-300 drop-shadow-[0_0_10px_rgba(103,232,249,0.9)]' 
+                    : 'text-yellow-400 drop-shadow-[0_0_10px_rgba(250,204,21,0.9)]';
+
+                particle.className = `fixed pointer-events-none z-[200] ${colorClass}`;
+                particle.innerHTML = iconSvg;
+                
+                // Posição inicial (centro inferior do ecrã)
+                const startX = 40 + (Math.random() * 20); // Inicia entre 40% e 60% da largura
+                const startY = 85 + (Math.random() * 10); // Inicia perto do botão
+                
+                // Trajetória do vento (espalhando de forma caótica para os lados e cima)
+                const moveX = (Math.random() * 100) - 50; // Vai para a esquerda e direita aleatoriamente (-50vw a +50vw)
+                const moveY = (Math.random() * -100) - 20; // Sobe aleatoriamente (-20vh a -120vh)
+                
+                // Tamanhos menores para dar ideia de poeira
+                const size = 8 + (Math.random() * 16); 
+                const duration = 1.5 + (Math.random() * 2.5); // Demora entre 1.5s e 4s
+                
+                particle.style.left = `${startX}%`;
+                particle.style.top = `${startY}%`;
+                particle.style.fontSize = `${size}px`;
+                particle.style.setProperty('--tx', `${moveX}vw`);
+                particle.style.setProperty('--ty', `${moveY}vh`);
+                
+                // Aplica a nova animação de vento
+                particle.style.animation = `stardustWind ${duration}s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards`;
+                
+                document.body.appendChild(particle);
+                
+                setTimeout(() => {
+                    if (document.body.contains(particle)) {
+                        particle.remove();
+                    }
+                }, duration * 1000);
             }
         }
 
@@ -515,18 +593,18 @@
         function updateMusicUI() {
             const bars = document.querySelectorAll('.vis-bar');
             if (isPlaying) {
-                musicBtn.classList.add('active');
-                musicIcon.setAttribute('data-lucide', 'volume-2');
-                musicStatusText.textContent = "Agora Tocando";
+                if(musicBtn) musicBtn.classList.add('active');
+                if(musicIcon) musicIcon.setAttribute('data-lucide', 'volume-2');
+                if(musicStatusText) musicStatusText.textContent = "Agora Tocando";
                 bars.forEach((bar, index) => {
                     bar.classList.add('active');
                     bar.style.animationDelay = `${index * 0.05}s`;
                     bar.style.animationDuration = `${0.4 + Math.random() * 0.8}s`;
                 });
             } else {
-                musicBtn.classList.remove('active');
-                musicIcon.setAttribute('data-lucide', 'volume-x');
-                musicStatusText.textContent = "Música Pausada";
+                if(musicBtn) musicBtn.classList.remove('active');
+                if(musicIcon) musicIcon.setAttribute('data-lucide', 'volume-x');
+                if(musicStatusText) musicStatusText.textContent = "Música Pausada";
                 bars.forEach(bar => {
                     bar.classList.remove('active');
                     bar.style.height = '15%';
@@ -538,7 +616,6 @@
         function createHearts() {
             const isSwim = activeTheme === 'swim';
             
-            // Ícones SVG para os efeitos
             const heartSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>`;
             const starSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="currentColor" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`;
             const bubbleSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12a4 4 0 0 1 4-4"/></svg>`;
@@ -556,7 +633,6 @@
                 let svgHtml = '';
                 let extraClasses = '';
 
-                // Decidir o que soltar baseado no tema selecionado
                 if (isSwim) {
                     svgHtml = isPrimaryParticle ? bubbleSvg : dropSvg;
                     extraClasses = isPrimaryParticle ? 'text-cyan-300 drop-shadow-[0_0_8px_rgba(103,232,249,0.8)]' : 'text-blue-400 drop-shadow-[0_0_8px_rgba(96,165,250,0.8)]';
